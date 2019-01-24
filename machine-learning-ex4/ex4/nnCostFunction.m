@@ -66,7 +66,7 @@ D1 = zeros(size(Theta1));
 D2 = zeros(size(Theta2));
 for i = 1:m
   yt = y(i);
-  ytemp = [1:4] == yt;
+  ytemp = [1:num_labels] == yt;
   temp = X(i,:)';
   x1 = [1;temp];
   z2 = Theta1 * x1;
@@ -76,8 +76,9 @@ for i = 1:m
   h = sigmoid(z3);
   J = J + sum(-1 * ((ytemp' .* log(h)) + ((1 .- ytemp)' .* log(1 - h))) / m);
   del3 = h - ytemp';
-  del2 = Theta2' * del3 .* sigmoidGradient([1;z2]);
+  del2 = Theta2' * del3;
   del2 = del2(2:end);
+  del2 = del2 .* sigmoidGradient(z2);
   D1 = D1 + (del2 * x1');
   D2 = D2 + (del3 * a2');
 end
